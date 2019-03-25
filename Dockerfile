@@ -3,5 +3,5 @@ FROM scratch
 ENV PORT 8000
 EXPOSE $PORT
 
-COPY advent /
-CMD ["/advent"]
+COPY k8s-testserver /
+CMD ["/k8s-testserver"]

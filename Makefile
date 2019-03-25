@@ -1,11 +1,11 @@
-PROJECT?=github.com/rumyantseva/advent-2017
-APP?=advent
+PROJECT?=github.com/fvbock/advent-2017
+APP?=k8s-testserver
 PORT?=8000
 
 RELEASE?=0.0.1
 COMMIT?=$(shell git rev-parse --short HEAD)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
-CONTAINER_IMAGE?=docker.io/webdeva/${APP}
+CONTAINER_IMAGE?=docker.io/fpubdoc/${APP}
 
 GOOS?=linux
 GOARCH?=amd64
@@ -34,11 +34,11 @@ test:
 push: container
 	docker push $(CONTAINER_IMAGE):$(RELEASE)
 
-minikube: push
+minikube:
 	for t in $(shell find ./kubernetes/advent -type f -name "*.yaml"); do \
         cat $$t | \
-        	gsed -E "s/\{\{(\s*)\.Release(\s*)\}\}/$(RELEASE)/g" | \
-        	gsed -E "s/\{\{(\s*)\.ServiceName(\s*)\}\}/$(APP)/g"; \
+			sed -E "s/\{\{(\s*)\.Release(\s*)\}\}/$(RELEASE)/g" | \
+			sed -E "s/\{\{(\s*)\.ServiceName(\s*)\}\}/$(APP)/g"; \
         echo ---; \
     done > tmp.yaml
 	kubectl apply -f tmp.yaml
